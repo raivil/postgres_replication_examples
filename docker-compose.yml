@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  postgres-11:
+    image: postgres:11-alpine
+    container_name: postgres-11
+    ports:
+      - 5431:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      REPLICATION_USER: repuser
+      REPLICATION_PASS: rep123
+      DB_NAME: example_db
+      DB_USER: example_user
+      DB_PASS: abc123
+    volumes:
+      - ./postgresql-11/init-master.sh:/docker-entrypoint-initdb.d/init.sh
+      - ./postgresql-11:/tmp/postgresql
+    restart: always
+  postgres-13:
+    image: postgres:13-alpine
+    container_name: postgres-13
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      REPLICATION_USER: repuser
+      REPLICATION_PASS: rep123
+      DB_NAME: example_db
+      DB_USER: example_user
+      DB_PASS: abc123
+      PUBLICATION_SERVER: postgres-11
+    volumes:
+      - ./postgresql-13/init-master.sh:/docker-entrypoint-initdb.d/init.sh
+      - ./postgresql-13:/tmp/postgresql
+    restart: always
